@@ -20,14 +20,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".InsertActivity" android:label="Insert Address"/>
+        <activity android:name=".InsertAddressActivity" android:label="Insert Address"/>
         <activity android:name=".DetailAddressActivity" android:label="Detail Address"/>
         <activity android:name=".ModifyAddressActivity" android:label="Modify Address"/>
         <activity android:name=".DeleteAddressActivity" android:label="Delete Address"/>
-        <activity android:name=".UploadActivity" android:label="Upload File"/>
-        <activity android:name=".DownloadActivity" android:label="Download File"/>
         <activity android:name=".CloudActivity" android:label="Cloud"/>
-        <activity android:name=".DeleteActivity" android:label="Download File"/>
 
     </application>
 

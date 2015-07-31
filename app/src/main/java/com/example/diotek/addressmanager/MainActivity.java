@@ -2,7 +2,6 @@ package com.example.diotek.addressmanager;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -16,12 +15,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
+/**
+ * Created by diotek on 2015-07-20.
+ */
 public class MainActivity extends ActionBarActivity implements BaseVariables {
 
-    public DBManageActivity mDbManager = null;
+    public DBManage mDbManager = null;
 
     EditText mSearchEdit = null;
 
@@ -32,7 +34,6 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
     Button mCloudBtn = null;
 
     ArrayList<Item> mAddressListItem = null;
-    ArrayList<Item> mAddressDeleteItem = null;
     InsertAdapter mAddressListAdapter = null;
 
     @Override
@@ -40,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDbManager = DBManageActivity.getInstance(this);
+        mDbManager = DBManage.getInstance(this);
 
         mAddressListView = (ListView)findViewById(R.id.addressListView);
         mAddressTotalText = (TextView)findViewById(R.id.addressTotalText);
@@ -48,13 +49,11 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
 
         mInsertBtn = (Button)findViewById(R.id.insertButton);
         mDeleteBtn = (Button)findViewById(R.id.deleteButton);
-
         mCloudBtn = (Button)findViewById(R.id.cloudButton);
 
         //어뎁터
         mAddressListItem = new ArrayList<Item>();
-        mAddressDeleteItem = new ArrayList<Item>();
-        mAddressListAdapter = new InsertAdapter(this, R.layout.activity_addresslist, mAddressListItem);
+        mAddressListAdapter = new InsertAdapter(this, R.layout.addresslist, mAddressListItem);
 
         mAddressListView.setAdapter(mAddressListAdapter);
 
@@ -78,6 +77,7 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
                 mAddressListItem.add(new Item(index, name));
             }
             mAddressListAdapter.notifyDataSetChanged();
+            Collections.sort(mAddressListItem, new AddressNameCompare());
             setAddressTotalText(mAddressListAdapter.getCount());
             c.close();
         }
@@ -141,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent();
-            intent.setClass(MainActivity.this, InsertActivity.class);
+            intent.setClass(MainActivity.this, InsertAddressActivity.class);
             startActivityForResult(intent, INSERT_ADDRESS_ACTIVITY);
         }
     };
@@ -167,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
     protected void onActivityResult (int requestCode, int resultCode, Intent intent){
         if(requestCode == INSERT_ADDRESS_ACTIVITY){
             if(resultCode == INSERT_RESULT_OK){
-                insertAddressListAfterInsertResultOK(intent);
+                viewAddressList();
             }
         }
         else if(requestCode == DELETE_ADDRESS_ACTIVITY){
@@ -177,7 +177,7 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
         }
         else if(requestCode == DETAIL_ADDRESS_ACTIVITY){
             if(resultCode == DETAIL_RESULT_OK){
-               deleteAddressListAfterDetailResultOK(intent);
+               viewAddressList();
             }
         }
         else if(requestCode == CLOUD_ACTIVITY){
@@ -185,28 +185,6 @@ public class MainActivity extends ActionBarActivity implements BaseVariables {
                 viewAddressList();
             }
         }
-    }
-
-    private void insertAddressListAfterInsertResultOK(Intent intent) {
-        int totalItemsCnt = 0;
-        Bundle bundleData = intent.getBundleExtra(INSERT_DATA_KEY);
-
-        mAddressListItem.add(new Item(bundleData.getLong(INSERT_INDEX_KEY), bundleData.getString(INSERT_NAME_KEY)));
-        mAddressListAdapter.notifyDataSetChanged();
-
-        totalItemsCnt = mAddressListAdapter.getCount();
-        setAddressTotalText(totalItemsCnt);
-    }
-
-    private void deleteAddressListAfterDetailResultOK(Intent intent) {
-        int totalItemsCnt = 0;
-        Bundle bundleData =intent.getBundleExtra(LIST_INDIVIDUAL_DATA_KEY);
-
-        mAddressListItem.remove(bundleData.getInt(LIST_POSITION_KEY));
-        mAddressListAdapter.notifyDataSetChanged();
-
-        totalItemsCnt = mAddressListAdapter.getCount();
-        setAddressTotalText(totalItemsCnt);
     }
 
     @Override

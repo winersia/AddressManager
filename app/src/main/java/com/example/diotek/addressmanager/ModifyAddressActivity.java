@@ -12,7 +12,7 @@ import android.widget.EditText;
  * Created by diotek on 2015-07-21.
  */
 public class ModifyAddressActivity extends Activity implements BaseVariables{
-    public DBManageActivity mDbManager = null;
+    public DBManage mDbManager = null;
     Button individualCancelBtn = null;
     Button individualSaveBtn = null;
 
@@ -35,23 +35,24 @@ public class ModifyAddressActivity extends Activity implements BaseVariables{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insertaddress);
 
-        mDbManager = DBManageActivity.getInstance(this);
+        mDbManager = DBManage.getInstance(this);
+
+        mIntent = getIntent();
+        mBundleData = mIntent.getBundleExtra(MODIFY_DATA_KEY);
+        mModifyAddressIndex = mBundleData.getLong(MODIFY_INDEX_KEY);
+        mModifyAddressPosition = mBundleData.getInt(MODIFY_POSITION_KEY);
+
         individualCancelBtn = (Button) findViewById(R.id.individualCancelButton);
         individualSaveBtn = (Button) findViewById(R.id.individualSaveButton);
+
+        individualSaveBtn.setOnClickListener(mModifySaveClickListener);
+        individualCancelBtn.setOnClickListener(mModifyCancelClickListener);
 
         mModifyNameEdit = (EditText) findViewById(R.id.insertAddressNameEdit);
         mModifyPhoneNumberEdit = (EditText) findViewById(R.id.insertAddressPhoneNumberEdit);
         mModifyHomeNumberEdit = (EditText) findViewById(R.id.insertAddressHomeNumberEdit);
         mModifyCompanyNumberEdit = (EditText) findViewById(R.id.insertAddressCompanyNumberEdit);
         mModifyEmailEdit = (EditText) findViewById(R.id.insertAddressEmailEdit);
-
-        individualSaveBtn.setOnClickListener(mModifySaveClickListener);
-        individualCancelBtn.setOnClickListener(mModifyCancelClickListener);
-
-        mIntent = getIntent();
-        mBundleData = mIntent.getBundleExtra(MODIFY_DATA_KEY);
-        mModifyAddressIndex = mBundleData.getLong(MODIFY_INDEX_KEY);
-        mModifyAddressPosition = mBundleData.getInt(MODIFY_POSITION_KEY);
 
         mModifyNameEdit.setText(mBundleData.getString(MODIFY_NAME_KEY));
         mModifyPhoneNumberEdit.setText(mBundleData.getString(MODIFY_PHONE_NUMBER_KEY));

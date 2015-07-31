@@ -1,59 +1,48 @@
 package com.example.diotek.addressmanager;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by diotek on 2015-07-22.
  */
 public class DeleteAddressActivity extends Activity implements BaseVariables {
 
-    public DBManageActivity mDbManager = null;
+    public DBManage mDbManager = null;
 
-    ArrayList<Item> mDeleteName = null;
+    ArrayList<Item> mDeleteNameList = null;
     ArrayList<Long> mCheckedListIndex = null;
     boolean[] mCheckedListPosition = null;
-    CompoundButton mDeleteCheckBoxes = null;
     DeleteAdapter mDeleteAdapter = null;
 
     ListView mDeleteListView = null;
     Button mDeleteBtn = null;
     Button mBackBtn = null;
 
-    Intent mIntent = null;
-    Bundle mBundleData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deleteaddress);
 
-        mDbManager = DBManageActivity.getInstance(this);
+        mDbManager = DBManage.getInstance(this);
 
         mDeleteListView = (ListView)findViewById(R.id.deleteAddressListView);
         mDeleteBtn = (Button)findViewById(R.id.deleteButton);
         mBackBtn = (Button)findViewById(R.id.backButton);
 
-        mIntent = getIntent();
-        mBundleData = new Bundle();
-
-        mDeleteName = new ArrayList<Item>();
+        mDeleteNameList = new ArrayList<Item>();
         mCheckedListIndex= new ArrayList<Long>();
 
-        mDeleteAdapter = new DeleteAdapter(this, R.layout.activity_deletelist, mDeleteName, mDeleteCheckBoxCheckedListener);
+        mDeleteAdapter = new DeleteAdapter(this, R.layout.deletelist, mDeleteNameList, mDeleteCheckBoxCheckedListener);
         mDeleteListView.setAdapter(mDeleteAdapter);
         mDeleteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
@@ -65,22 +54,23 @@ public class DeleteAddressActivity extends Activity implements BaseVariables {
 
     private void setDeleteList(){
         Cursor c = mDbManager.query(COLUMNS, null, null, null, null, null);
-        mDeleteName.clear();
+        mDeleteNameList.clear();
         if(c != null) {
             while (c.moveToNext()) {
                 //데이터 원본 준비
                 long index = c.getLong(c.getColumnIndex(DB_INDEX));
                 String name = c.getString(c.getColumnIndex(DB_NAME));
-                mDeleteName.add(new Item(index, name));
+                mDeleteNameList.add(new Item(index, name));
             }
             mDeleteAdapter.notifyDataSetChanged();
+            Collections.sort(mDeleteNameList, new AddressNameCompare());
             setCheckBox();
 
             c.close();
         }
     }
 
-    private void setCheckBox(){
+  private void setCheckBox(){
         mCheckedListPosition= new boolean[mDeleteAdapter.getCount()];
 
         for (int i = 0; i < mCheckedListPosition.length; i++) {
@@ -121,7 +111,7 @@ public class DeleteAddressActivity extends Activity implements BaseVariables {
                for(int i = mCheckedListPosition.length-1 ; i >=0 ; i--){
                     if(mCheckedListPosition[i]){
                         mCheckedListPosition[i] = false;
-                        mDeleteName.remove(i);
+                        mDeleteNameList.remove(i);
                     }
                 }
                 mDeleteAdapter.notifyDataSetChanged();

@@ -1,5 +1,7 @@
 package com.example.diotek.addressmanager;
 
+import java.util.Comparator;
+
 /**
  * Created by diotek on 2015-07-22.
  */
@@ -21,22 +23,13 @@ public interface BaseVariables {
     public static final int DETAIL_ADDRESS_ACTIVITY = 1;
     public static final int MODIFY_ADDRESS_ACTIVITY = 2;
     public static final int DELETE_ADDRESS_ACTIVITY = 3;
-    public static final int UPLOAD_ADDRESS_ACTIVITY = 4;
-    public static final int DOWNLOAD_ADDRESS_ACTIVITY = 5;
-    public static final int SYNCHRONIZE_ADDRESS_ACTIVITY = 6;
-    public static final int CLOUD_ACTIVITY = 7;
+    public static final int CLOUD_ACTIVITY = 4;
 
     public static final int INSERT_RESULT_OK = -2;
     public static final int DELETE_RESULT_OK = -3;
     public static final int DETAIL_RESULT_OK = -4;
     public static final int MODIFY_RESULT_OK = -5;
-    public static final int UPLOAD_RESULT_OK = -6;
-    public static final int UPLOAD_RESULT_CANCELED = -7;
-    public static final int DOWNLOAD_RESULT_OK = -8;
-    public static final int DOWNLOAD_RESULT_CANCELED = -9;
-    public static final int SYNCHRONIZE_RESULT_OK = -10;
-    public static final int SYNCHRONIZE_RESULT_CANCELED = -11;
-    public static final int CLOUD_RESULT_OK = -12;
+    public static final int CLOUD_RESULT_OK = -6;
 
     public static final String MY_ADDRESS = "내 연락처";
     public static final String LIST_INDEX_KEY = "individualIndex";
@@ -63,9 +56,26 @@ public interface BaseVariables {
     public static final String INSERT_INDEX_KEY = "insertIndex";
     public static final String INSERT_NAME_KEY = "insertName";
 
-    public static final String PREFERENCE = "preference";
-    public static final String DRIVE_ID = "drive_id";
-    public static final String RESOURCE_ID = "resource_id";
+    public static final int UPLOAD = 0;
+    public static final String UPLOAD_ING_MESSAGE = "업로드 중...";
+    public static final String UPLOAD_SUCCESS_MESSAGE = "업로드 완료";
+    public static final String UPLOAD_FAIL_MESSAGE = "업로드 실패";
+
+    public static final int DOWNLOAD = 0;
+    public static final String DOWNLOAD_ING_MESSAGE = "다운로드 중...";
+    public static final String DOWNLOAD_SUCCESS_MESSAGE = "다운로드 완료";
+    public static final String DOWNLOAD_FAIL_MESSAGE = "다운로드 실패";
+
+    public static final int SYNCHRONIZATION = 1;
+    public static final String SYNCHRONIZATION_ING_MESSAGE = "동기화 중...";
+    public static final String SYNCHRONIZATION_SUCCESS_MESSAGE = "동기화 완료";
+    public static final String SYNCHRONIZATION_FAIL_MESSAGE = "동기화 실패";
+
+    public static final String THERE_IS_NO_FILE_IN_DRIVE = "Drive에 파일이 없습니다.";
+
+    public static final String DELETE_ING_MESSAGE = "삭제 중...";
+    public static final String DELETE_SUCCESS_MESSAGE = "삭제 완료";
+    public static final String DELETE_FAIL_MESSAGE = "삭제 실패";
 
     public static final String[] COLUMNS = new String[] {"_index", "name","phone_number","home_number","company_number", "e_mail"};
 
@@ -87,4 +97,10 @@ public interface BaseVariables {
         private String mName;
     }
 
+    public class AddressNameCompare implements Comparator<Item> {
+        @Override
+        public int compare(Item arg0, Item arg1) {
+            return arg0.getmName().compareTo(arg1.getmName());
+        }
+    }
 }

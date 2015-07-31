@@ -8,13 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by diotek on 2015-07-21.
  */
 public class DetailAddressActivity extends Activity implements BaseVariables {
-    public DBManageActivity mDbManager = null;
+    public DBManage mDbManager = null;
 
     Button mBackBtn = null;
     Button mModifyBtn = null;
@@ -43,7 +41,7 @@ public class DetailAddressActivity extends Activity implements BaseVariables {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailaddress);
 
-        mDbManager = DBManageActivity.getInstance(this);
+        mDbManager = DBManage.getInstance(this);
         mBackBtn = (Button)findViewById(R.id.backButton);
         mModifyBtn = (Button)findViewById(R.id.modifyButton);
         mDeleteBtn = (Button)findViewById(R.id.deleteButton);
@@ -56,7 +54,7 @@ public class DetailAddressActivity extends Activity implements BaseVariables {
 
         mBackBtn.setOnClickListener(mBackClickListener);
         mModifyBtn.setOnClickListener(mModifyClickListener);
-        mDeleteBtn.setOnClickListener(mDetailDeleteClickListener);
+        mDeleteBtn.setOnClickListener(mDeleteClickListener);
 
         mIntent = getIntent();
         mBundleData = mIntent.getBundleExtra(LIST_INDIVIDUAL_DATA_KEY);
@@ -103,6 +101,7 @@ public class DetailAddressActivity extends Activity implements BaseVariables {
     private View.OnClickListener mModifyClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            setDetailAddress();
             Bundle modifyBundleData = new Bundle();
 
             modifyBundleData.putLong(MODIFY_INDEX_KEY,mDetailAddressIndex);
@@ -119,7 +118,7 @@ public class DetailAddressActivity extends Activity implements BaseVariables {
         }
     };
 
-    private View.OnClickListener mDetailDeleteClickListener = new View.OnClickListener() {
+    private View.OnClickListener mDeleteClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             mDbManager.delete( DB_INDEX + "=" + mDetailAddressIndex, null);
@@ -139,6 +138,8 @@ public class DetailAddressActivity extends Activity implements BaseVariables {
                 mHomeNumberText.setText(bundleData.getString(MODIFIED_HOME_NUMBER_KEY));
                 mCompanyNumberText.setText(bundleData.getString(MODIFIED_COMPANY_NUMBER_KEY));
                 mEmailText.setText(bundleData.getString(MODIFIED_E_MAIL_KEY));
+
+                setResult(DETAIL_RESULT_OK, mIntent);
             }
         }
     }

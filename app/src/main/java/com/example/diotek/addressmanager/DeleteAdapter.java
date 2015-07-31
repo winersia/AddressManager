@@ -19,7 +19,6 @@ import java.util.ArrayList;
 public class DeleteAdapter extends BaseAdapter implements BaseVariables {
     LayoutInflater mInflater = null;
     ArrayList<Item> mItems = null;
-    ArrayList<Long> mCheckedListIds = null;
     CheckBox mDeleteCheckBox = null;
     TextView mDeleteNameText = null;
     int mLayout = 0;
@@ -30,10 +29,6 @@ public class DeleteAdapter extends BaseAdapter implements BaseVariables {
         mItems = addressItems;
         mLayout = layout;
         mDeleteCheckBoxCheckedListener = deleteCheckBoxCheckedListener;
-    }
-
-    public CheckBox getCheckBox() {
-        return mDeleteCheckBox;
     }
 
     @Override
@@ -68,5 +63,4 @@ public class DeleteAdapter extends BaseAdapter implements BaseVariables {
 
         return convertView;
     }
-
 }
